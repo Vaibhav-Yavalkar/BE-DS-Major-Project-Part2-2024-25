@@ -1,0 +1,149 @@
+/* High-Level Modern UI with Dynamic Effects */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #0d0d0d;
+    color: #f5f5f5;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    padding: 20px;
+    background: linear-gradient(135deg, #ff8c00, #1e3a8a);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header a {
+    margin: 0 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.4s ease-in-out;
+}
+
+.header a:hover {
+    color: #ffcc00;
+}
+
+.container {
+    margin-top: 100px;
+    padding: 30px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+}
+
+.title {
+    font-size: 38px;
+    font-weight: bold;
+    background: -webkit-linear-gradient(#ff8c00, #1e3a8a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.search-box {
+    margin-top: 30px;
+    position: relative;
+    width: 100%;
+}
+
+.search-box input[type="text"] {
+    padding: 14px;
+    width: 100%;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    background: #222;
+    color: #ff8c00;
+    transition: all 0.3s;
+    box-shadow: 0 2px 10px rgba(255, 140, 0, 0.4);
+}
+
+.search-box input[type="text"]:focus {
+    background: #333;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.6);
+}
+
+#stockList {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    border-radius: 6px;
+    display: none;
+    background: #111;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.5);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+}
+
+#stockList li {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #222;
+    transition: background 0.3s;
+    color: #ff8c00;
+}
+
+#stockList li:hover {
+    background-color: #1e3a8a;
+}
+
+.suggestions {
+    margin-top: 20px;
+}
+
+.suggestions a {
+    display: inline-block;
+    margin: 5px 10px;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #ff8c00, #1e3a8a);
+    border-radius: 25px;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    transition: transform 0.3s ease-in-out, background 0.3s;
+}
+
+.suggestions a:hover {
+    transform: scale(1.08);
+    background: linear-gradient(135deg, #1e3a8a, #ff8c00);
+}
+
+.top-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.top-right a {
+    text-decoration: none;
+    margin: 0 10px;
+    color: white;
+    transition: opacity 0.3s;
+}
+
+.top-right a:hover {
+    opacity: 0.7;
+}
+
+
