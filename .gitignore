@@ -1,1 +1,3 @@
 *.pyc
+*.gz
+/Group 11_EtherFund/src/EtherFund/.next/cache
