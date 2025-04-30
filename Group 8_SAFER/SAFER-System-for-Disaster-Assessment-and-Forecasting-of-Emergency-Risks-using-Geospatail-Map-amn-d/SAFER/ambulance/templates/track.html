@@ -1,0 +1,57 @@
+{% extends 'home.html' %} 
+{% load static %}
+{% block title %}
+ambulance-main
+{% endblock %}
+{% block content %}
+<div class="tracking-text-div">
+  <h1>Your location is currently being tracked for assistance</h1>
+  <p>To stop tracking, disable your GPS. If you want the requester to continue seeing your location, please keep this page open.</p>
+</div>
+<script>
+  const SERVER_URL = "http://127.0.0.1:8000/ambulance/receive-location/";
+
+  function sendLocation(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+
+    fetch(SERVER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ latitude: lat, longitude: lon }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("📍 Location sent:", data))
+      .catch((error) => console.error("❌ Error sending location:", error));
+  }
+
+  function getLocations() {
+    fetch(SERVER_URL, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("📍 Received locations:", data.locations);
+      })
+      .catch((error) => console.error("❌ Error fetching locations:", error));
+  }
+
+  function trackLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(sendLocation, console.error, {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+
+  trackLocation();
+
+  setInterval(getLocations, 10000);
+</script>
+{% csrf_token %}
+{% endblock %}
+

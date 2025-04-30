@@ -1,0 +1,1094 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #010101;
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 5vh;
+  padding: 4vh 0;
+  border-bottom: 1px solid rgb(33, 33, 33);
+  background: rgba(1, 1, 1, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: top 0.3s ease;
+  z-index: 1024;
+}
+header nav {
+  height: 100%;
+  width: 80vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10.5%;
+}
+@media (max-width: 1024px) {
+  header nav {
+    padding-left: 8%;
+  }
+}
+header nav .logo {
+  display: flex;
+  height: 10vh;
+  justify-content: center;
+  align-items: center;
+}
+header nav .logo a {
+  text-decoration: none;
+  color: #fefefe;
+  font-weight: 700;
+  transition: color 0.3s;
+  font-size: 4vb;
+  letter-spacing: 0.05em;
+}
+header nav .logo a span {
+  color: #db0538;
+}
+header nav .logo a:hover {
+  color: #db0538; /* Change to this color on hover */
+}
+header nav .profile {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 1vb;
+}
+header nav .profile .icon {
+  background-color: #141414;
+  color: #9d9d9d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 6vb;
+  height: 6vb;
+  border-radius: 50%;
+  font-size: 3vb;
+  transition: background-color 0.3s;
+}
+header nav .profile .icon:nth-child(1):hover {
+  background-color: #64acc4;
+  color: #fefefe;
+}
+header nav .profile .icon:nth-child(2):hover {
+  background-color: #c49018;
+  color: #fefefe;
+}
+header nav .profile .icon:nth-child(3):hover {
+  background-color: #a54127;
+  color: #fefefe;
+}
+header nav .profile i {
+  margin: 0;
+}
+
+/* Styling the scrolling bar */
+.scrolling-bar {
+  white-space: nowrap;
+  width: 100vw;
+  margin: 0 auto;
+  position: fixed; /* Change from absolute to fixed */
+  top: 100%; /* Adjusted to sit right below the header */
+  left: 0;
+  background: rgba(1, 1, 1, 0.65);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border-block: 1px solid #484848;
+  transition: top 0.3s ease;
+  z-index: 1023; /* Slightly lower than the header */
+}
+
+/* Emergency Contacts Styling */
+.emergency-contacts p {
+  display: flex;
+  gap: 3vw;
+  animation: scrollText 15s linear infinite;
+  color: #fefefe;
+  font-size: 2.5vb;
+}
+
+/* Scroll Animation */
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+.banner-flood,
+.banner-landslide {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 80%), url("../static/flood_banner.png"); /* Fading black effect */
+  background-size: cover; /* Make sure the image covers the entire banner */
+  background-position: center; /* Center the image */
+  height: 100vh; /* Half the screen height */
+  width: 100vw; /* Full width */
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+.banner-flood .flood,
+.banner-flood .landslide,
+.banner-landslide .flood,
+.banner-landslide .landslide {
+  padding-top: 25vh;
+  width: 40%;
+  height: 100%;
+  padding-left: 10vw;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-start; /* Align items to the left */
+  text-align: left; /* Align text to the left */
+  font-family: "Poppins", sans-serif; /* Apply Poppins font */
+  z-index: 1;
+}
+@media (max-width: 1024px) {
+  .banner-flood .flood,
+  .banner-flood .landslide,
+  .banner-landslide .flood,
+  .banner-landslide .landslide {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    width: 85%; /* Set width to 100% on mobile */
+    padding-left: 8vw; /* Optional: Adjust padding for mobile */
+    padding-top: 25vh;
+  }
+}
+.banner-flood .flood h3,
+.banner-flood .flood h6,
+.banner-flood .flood p,
+.banner-flood .landslide h3,
+.banner-flood .landslide h6,
+.banner-flood .landslide p,
+.banner-landslide .flood h3,
+.banner-landslide .flood h6,
+.banner-landslide .flood p,
+.banner-landslide .landslide h3,
+.banner-landslide .landslide h6,
+.banner-landslide .landslide p {
+  margin: 0;
+  padding: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  color: #fefefe;
+}
+.banner-flood .flood .description-flood,
+.banner-flood .landslide .description-flood,
+.banner-landslide .flood .description-flood,
+.banner-landslide .landslide .description-flood {
+  font-size: 2.3vb;
+  padding-bottom: 2vh;
+}
+.banner-flood .flood .description-flood i,
+.banner-flood .landslide .description-flood i,
+.banner-landslide .flood .description-flood i,
+.banner-landslide .landslide .description-flood i {
+  margin-right: 0.5vw;
+}
+@media (max-width: 1024px) {
+  .banner-flood .flood .description-flood,
+  .banner-flood .landslide .description-flood,
+  .banner-landslide .flood .description-flood,
+  .banner-landslide .landslide .description-flood {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 2vb;
+  }
+}
+@media (max-width: 500px) {
+  .banner-flood .flood .description-flood,
+  .banner-flood .landslide .description-flood,
+  .banner-landslide .flood .description-flood,
+  .banner-landslide .landslide .description-flood {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 1.5vb;
+  }
+}
+.banner-flood .flood .location,
+.banner-flood .landslide .location,
+.banner-landslide .flood .location,
+.banner-landslide .landslide .location {
+  color: #8ac7da;
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+.banner-flood .flood .location:hover,
+.banner-flood .landslide .location:hover,
+.banner-landslide .flood .location:hover,
+.banner-landslide .landslide .location:hover {
+  color: #5aa1b3; /* Color change on hover */
+}
+.banner-flood .flood .location span,
+.banner-flood .landslide .location span,
+.banner-landslide .flood .location span,
+.banner-landslide .landslide .location span {
+  color: #8ac7da;
+  margin-left: 0.5vw;
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+.banner-flood .flood .location span:hover,
+.banner-flood .landslide .location span:hover,
+.banner-landslide .flood .location span:hover,
+.banner-landslide .landslide .location span:hover {
+  color: #5aa1b3; /* Color change on hover */
+}
+.banner-flood .flood .safety-tips,
+.banner-flood .landslide .safety-tips,
+.banner-landslide .flood .safety-tips,
+.banner-landslide .landslide .safety-tips {
+  margin-bottom: 2vh;
+  font-size: 2.2vb;
+}
+.banner-flood .flood .safety-tips i,
+.banner-flood .landslide .safety-tips i,
+.banner-landslide .flood .safety-tips i,
+.banner-landslide .landslide .safety-tips i {
+  margin-right: 0.5vw;
+}
+.banner-flood .flood .safety-tips .more-tips,
+.banner-flood .landslide .safety-tips .more-tips,
+.banner-landslide .flood .safety-tips .more-tips,
+.banner-landslide .landslide .safety-tips .more-tips {
+  color: #8ac7da; /* Same color as other links */
+  text-decoration: none; /* Remove underline */
+}
+.banner-flood .flood .safety-tips .more-tips:hover,
+.banner-flood .landslide .safety-tips .more-tips:hover,
+.banner-landslide .flood .safety-tips .more-tips:hover,
+.banner-landslide .landslide .safety-tips .more-tips:hover {
+  color: #3e7f8f; /* Change color on hover */
+}
+@media (max-width: 1024px) {
+  .banner-flood .flood .safety-tips,
+  .banner-flood .landslide .safety-tips,
+  .banner-landslide .flood .safety-tips,
+  .banner-landslide .landslide .safety-tips {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 1.8vb;
+  }
+}
+@media (max-width: 500px) {
+  .banner-flood .flood .safety-tips,
+  .banner-flood .landslide .safety-tips,
+  .banner-landslide .flood .safety-tips,
+  .banner-landslide .landslide .safety-tips {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 1.5vb;
+  }
+}
+.banner-flood .flood .helpline-numbers-home,
+.banner-flood .landslide .helpline-numbers-home,
+.banner-landslide .flood .helpline-numbers-home,
+.banner-landslide .landslide .helpline-numbers-home {
+  font-size: 2.2vb;
+  color: #fefefe;
+  font-weight: 300;
+}
+.banner-flood .flood .helpline-numbers-home span,
+.banner-flood .landslide .helpline-numbers-home span,
+.banner-landslide .flood .helpline-numbers-home span,
+.banner-landslide .landslide .helpline-numbers-home span {
+  margin-left: 0.8vw;
+}
+.banner-flood .flood .helpline-numbers-home a,
+.banner-flood .landslide .helpline-numbers-home a,
+.banner-landslide .flood .helpline-numbers-home a,
+.banner-landslide .landslide .helpline-numbers-home a {
+  color: #8ac7da; /* Default link color */
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+.banner-flood .flood .helpline-numbers-home a:hover,
+.banner-flood .landslide .helpline-numbers-home a:hover,
+.banner-landslide .flood .helpline-numbers-home a:hover,
+.banner-landslide .landslide .helpline-numbers-home a:hover {
+  color: #5aa1b3; /* Color change on hover */
+}
+@media (max-width: 1024px) {
+  .banner-flood .flood .helpline-numbers-home,
+  .banner-flood .landslide .helpline-numbers-home,
+  .banner-landslide .flood .helpline-numbers-home,
+  .banner-landslide .landslide .helpline-numbers-home {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 2vb;
+  }
+}
+@media (max-width: 500px) {
+  .banner-flood .flood .helpline-numbers-home,
+  .banner-flood .landslide .helpline-numbers-home,
+  .banner-landslide .flood .helpline-numbers-home,
+  .banner-landslide .landslide .helpline-numbers-home {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 1.5vb;
+  }
+}
+.banner-flood .flood h3,
+.banner-flood .landslide h3,
+.banner-landslide .flood h3,
+.banner-landslide .landslide h3 {
+  font-size: 6vb;
+  line-height: 1.2;
+  font-weight: 600;
+  padding-top: 2vh;
+  margin-bottom: 3vh;
+}
+.banner-flood .flood h3 span,
+.banner-flood .landslide h3 span,
+.banner-landslide .flood h3 span,
+.banner-landslide .landslide h3 span {
+  color: #e0e0e0;
+}
+@media (max-width: 1024px) {
+  .banner-flood .flood h3,
+  .banner-flood .landslide h3,
+  .banner-landslide .flood h3,
+  .banner-landslide .landslide h3 {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    line-height: 1.2;
+    font-size: 5vb;
+    padding-bottom: 1vh;
+  }
+}
+.banner-flood .flood h6,
+.banner-flood .landslide h6,
+.banner-landslide .flood h6,
+.banner-landslide .landslide h6 {
+  font-size: 1.4vb;
+  font-weight: 200; /* Font weight */
+  line-height: 1;
+  margin-bottom: 3.5vh; /* Adjusted line height (reduce to make it more compact) */
+}
+.banner-flood .flood p,
+.banner-flood .landslide p,
+.banner-landslide .flood p,
+.banner-landslide .landslide p {
+  font-size: 2.5vb;
+  font-weight: 300;
+  color: #cccccc;
+}
+.banner-flood .flood button,
+.banner-flood .landslide button,
+.banner-landslide .flood button,
+.banner-landslide .landslide button {
+  margin-top: 3vh;
+  background-color: #3e7f8f; /* Default background color */
+  color: #fefefe; /* Text color */
+  border: none; /* Remove default border */
+  border-radius: 10px; /* Rounded corners */
+  padding: 2.5vh 2vw; /* Vertical and horizontal padding */
+  font-family: "Poppins", sans-serif; /* Apply Poppins font */
+  font-size: 2.2vb; /* Font size */
+  font-weight: 400; /* Bold font weight */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  text-shadow: none;
+}
+@media (max-width: 1024px) {
+  .banner-flood .flood button,
+  .banner-flood .landslide button,
+  .banner-landslide .flood button,
+  .banner-landslide .landslide button {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    padding: 2.5vh 5vw; /* Vertical and horizontal padding */
+  }
+}
+.banner-flood .flood button:hover,
+.banner-flood .landslide button:hover,
+.banner-landslide .flood button:hover,
+.banner-landslide .landslide button:hover {
+  background-color: #2f5961; /* Background color on hover */
+  color: #fefefe; /* Text color on hover */
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+}
+
+.banner-landslide {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 80%), url("../static/landslide_banner2.jpg"); /* Fading black effect */
+  background-size: cover; /* Make sure the image covers the entire banner */
+  background-position: center; /* Center the image */
+  height: 100vh; /* Half the screen height */
+  width: 100vw; /* Full width */
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .banner-landslide {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 80%), url("../static/landslide_banner2_mobile.jpg");
+  }
+}
+.banner-landslide .landslide {
+  padding-top: 25vh;
+  width: 40%;
+  height: 100%;
+  padding-left: 10vw;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-start; /* Align items to the left */
+  text-align: left; /* Align text to the left */
+  font-family: "Poppins", sans-serif; /* Apply Poppins font */
+  z-index: 1;
+}
+@media (max-width: 1024px) {
+  .banner-landslide .landslide {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    width: 85%; /* Set width to 100% on mobile */
+    padding-left: 8vw; /* Optional: Adjust padding for mobile */
+    padding-top: 25vh;
+  }
+}
+.banner-landslide .landslide h3,
+.banner-landslide .landslide h6,
+.banner-landslide .landslide p {
+  margin: 0;
+  padding: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  color: #fefefe;
+}
+.banner-landslide .landslide .description-flood {
+  font-size: 2.3vb;
+  padding-bottom: 2vh;
+}
+.banner-landslide .landslide .description-flood i {
+  margin-right: 0.5vw;
+}
+@media (max-width: 1024px) {
+  .banner-landslide .landslide .description-flood {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 2vb;
+  }
+}
+@media (max-width: 500px) {
+  .banner-landslide .landslide .description-flood {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 1.5vb;
+  }
+}
+.banner-landslide .landslide .location {
+  color: #deb887;
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+.banner-landslide .landslide .location:hover {
+  color: #c19a6b; /* Color change on hover */
+}
+.banner-landslide .landslide .location span {
+  color: #deb887;
+  margin-left: 0.5vw;
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+.banner-landslide .landslide .location span:hover {
+  color: #c19a6b; /* Color change on hover */
+}
+.banner-landslide .landslide .safety-tips {
+  margin-bottom: 2vh;
+  font-size: 2.2vb;
+}
+.banner-landslide .landslide .safety-tips i {
+  margin-right: 0.5vw;
+}
+.banner-landslide .landslide .safety-tips .more-tips {
+  color: #deb887; /* Same color as other links */
+  text-decoration: none; /* Remove underline */
+}
+.banner-landslide .landslide .safety-tips .more-tips:hover {
+  color: #c19a6b; /* Change color on hover */
+}
+@media (max-width: 1024px) {
+  .banner-landslide .landslide .safety-tips {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 1.8vb;
+  }
+}
+@media (max-width: 500px) {
+  .banner-landslide .landslide .safety-tips {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 1.5vb;
+  }
+}
+.banner-landslide .landslide .helpline-numbers-home {
+  font-size: 2.2vb;
+  color: #fefefe;
+  font-weight: 300;
+}
+.banner-landslide .landslide .helpline-numbers-home span {
+  margin-left: 0.8vw;
+}
+.banner-landslide .landslide .helpline-numbers-home a {
+  color: #deb887; /* Default link color */
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+.banner-landslide .landslide .helpline-numbers-home a:hover {
+  color: #c19a6b; /* Color change on hover */
+}
+@media (max-width: 1024px) {
+  .banner-landslide .landslide .helpline-numbers-home {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 2vb;
+  }
+}
+@media (max-width: 500px) {
+  .banner-landslide .landslide .helpline-numbers-home {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    font-size: 1.5vb;
+  }
+}
+.banner-landslide .landslide h3 {
+  font-size: 6vb;
+  line-height: 1.2;
+  font-weight: 600;
+  padding-top: 2vh;
+  margin-bottom: 3vh;
+}
+.banner-landslide .landslide h3 span {
+  color: #e0e0e0;
+}
+@media (max-width: 1024px) {
+  .banner-landslide .landslide h3 {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    line-height: 1.2;
+    font-size: 5vb;
+    padding-bottom: 1vh;
+  }
+}
+.banner-landslide .landslide h6 {
+  font-size: 1.4vb;
+  font-weight: 200; /* Font weight */
+  line-height: 1;
+  margin-bottom: 3.5vh; /* Adjusted line height (reduce to make it more compact) */
+}
+.banner-landslide .landslide p {
+  font-size: 2.5vb;
+  font-weight: 300;
+  color: #cccccc;
+}
+.banner-landslide .landslide button {
+  margin-top: 3vh;
+  background-color: #a77b4b; /* Default background color */
+  color: #fefefe; /* Text color */
+  border: none; /* Remove default border */
+  border-radius: 10px; /* Rounded corners */
+  padding: 2.5vh 2vw; /* Vertical and horizontal padding */
+  font-family: "Poppins", sans-serif; /* Apply Poppins font */
+  font-size: 2.2vb; /* Font size */
+  font-weight: 400; /* Bold font weight */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  text-shadow: none;
+}
+@media (max-width: 1024px) {
+  .banner-landslide .landslide button {
+    /* Adjust the max-width as needed for your mobile breakpoint */
+    padding: 2.5vh 5vw; /* Vertical and horizontal padding */
+  }
+}
+.banner-landslide .landslide button:hover {
+  background-color: #8f5c3d; /* Background color on hover */
+  color: #fefefe; /* Text color on hover */
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+}
+
+.swiper-container {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  border-bottom-left-radius: 8px; /* Adjust this value to control the roundness */
+  border-bottom-right-radius: 8px; /* Same for the right corner */
+  overflow-x: hidden; /* Ensure content doesn't overflow the rounded corners */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); /* Dark shadow for depth */
+}
+.swiper-container .swiper {
+  width: 100%;
+  height: 100%;
+}
+.swiper-container .swiper-wrapper .swiper-slide {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+.swiper-container .swiper-slide {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 1024px) {
+  .swiper-container .swiper-slide {
+    padding-bottom: 0;
+  }
+}
+
+.main-card-page {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+  box-sizing: border-box;
+  padding-inline: 10vw;
+  position: relative;
+  overflow-x: hidden;
+}
+.main-card-page .background-video {
+  position: absolute; /* Absolutely positioned within the main container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the entire container while keeping the aspect ratio */
+  opacity: 0; /* Initially hidden */
+  visibility: hidden; /* Initially hidden */
+  transition: opacity 0.5s ease-in-out; /* Smooth fade-in and fade-out over 500ms */
+  z-index: -1; /* Place behind all content */
+  filter: brightness(40%) sepia(30%) contrast(85%) hue-rotate(-15deg); /* Optional vintage effect */
+}
+.main-card-page .heading-cards {
+  display: flex;
+  flex-direction: column-reverse; /* Stack children vertically */
+  justify-content: end; /* Start content at the top */
+  align-items: flex-start; /* Align items to the left */
+  font-family: "Poppins", sans-serif;
+  text-align: left;
+  height: 35vh;
+  width: 81vw;
+  color: #cccccc;
+}
+.main-card-page .heading-cards h1 {
+  font-size: 4vb; /* Adjusted size */
+  font-weight: 200;
+  padding: 0;
+  margin-bottom: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Subtle black shadow */
+}
+@media (max-width: 1024px) {
+  .main-card-page .heading-cards h1 {
+    font-size: 3vb;
+  }
+}
+.main-card-page .heading-cards .line {
+  width: 6vw; /* Adjust the width of the line */
+  height: 1vh; /* Set the thickness of the line */
+  background-color: #e2e2e2; /* Color of the line */
+  transition: background-color 0.5s ease-in-out;
+}
+@media (max-width: 1024px) {
+  .main-card-page .heading-cards .line {
+    width: 25vw;
+    margin-top: 2vh;
+  }
+}
+.main-card-page .heading-cards .for-card-header {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 1024px) {
+  .main-card-page .heading-cards .for-card-header {
+    justify-content: start;
+  }
+}
+.main-card-page .heading-cards .for-card-header .information-regarding-images {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 15vw;
+  margin-right: 0;
+  margin-left: auto;
+}
+@media (max-width: 1024px) {
+  .main-card-page .heading-cards .for-card-header .information-regarding-images {
+    display: none;
+  }
+}
+.main-card-page .heading-cards .for-card-header .information-regarding-images p {
+  text-align: right; /* Aligns text to the right */
+  font-size: 1.5vb;
+  font-weight: 300;
+}
+.main-card-page .heading-cards .for-card-header .information-regarding-images p a {
+  text-decoration: none;
+  color: #4f91d9;
+}
+.main-card-page .heading-cards .for-card-header .cube {
+  margin-top: 4vh;
+  margin-right: 2vw;
+  width: 5vw;
+  height: 12vh;
+  border: 0.8vb solid peru;
+  border-radius: 1vb;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+@media (max-width: 1024px) {
+  .main-card-page .heading-cards .for-card-header .cube {
+    display: none;
+  }
+}
+.main-card-page .heading-cards .for-card-header h1 {
+  font-size: 6vb;
+  font-weight: 700;
+  padding: 0;
+  line-height: 1;
+  color: #f0f0f0;
+  user-select: none;
+}
+.main-card-page .heading-cards .for-card-header h1 span {
+  transition: color 0.3s ease;
+  letter-spacing: -1vb;
+}
+.main-card-page .heading-cards .for-card-header h1 .letter-a:hover {
+  color: #a676d9;
+}
+.main-card-page .heading-cards .for-card-header h1 .letter-r:hover {
+  color: #4f91d9;
+}
+.main-card-page .heading-cards .for-card-header h1 .letter-e:hover {
+  color: #d96565;
+}
+.main-card-page .heading-cards .for-card-header h1 .letter-s:hover {
+  color: #9d67d9;
+}
+.main-card-page .gradient-background {
+  position: absolute; /* Absolutely positioned within the main container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the entire container while keeping the aspect ratio */
+  opacity: 0; /* Initially hidden */
+  visibility: hidden; /* Initially hidden */
+  transition: opacity 0.5s ease; /* Smooth fade-in and fade-out */
+  z-index: -1; /* Place behind all content */
+}
+.main-card-page .unique-card-swiper-container {
+  display: flex;
+  width: 100vw;
+  height: 65vh;
+  margin-top: auto;
+  position: relative;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper {
+  width: 81vw;
+  height: 100%;
+  border-radius: 1vb;
+  overflow-x: hidden;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-wrapper {
+  display: flex;
+  align-items: flex-start;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  height: 60vh;
+  box-sizing: border-box;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card {
+  background-color: #121212; /* Dark background for the card */
+  border-radius: 2vb; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Softer shadow for depth */
+  text-align: center;
+  width: 20vw; /* Restrict the maximum width of the card */
+  height: 52vh;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card:hover {
+  transform: translateY(-2vh); /* Lift effect on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Deeper shadow on hover */
+}
+@media (max-width: 1024px) {
+  .main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card {
+    width: 100%;
+  }
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-image {
+  width: 20vw; /* Set width */
+  height: 27vh; /* Set height */
+  margin: 0;
+  padding: 0;
+  border-radius: 2vb 2vb 0 0; /* Rounded corners at the top */
+  object-fit: cover; /* Crop the image to fill the box */
+  object-position: center; /* Center the image within the box */
+  image-rendering: -webkit-optimize-contrast; /* For WebKit browsers */
+  image-rendering: crisp-edges; /* Reduce jagged edges */ /* Optional: add a slight blur for smoother appearance */
+}
+@media (max-width: 1024px) {
+  .main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-image {
+    width: 100%;
+    height: 24vh; /* Full width on smaller screens */
+  }
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-title {
+  padding-inline: 1.5vw;
+  margin: 0;
+  margin-top: 2vb;
+  font-family: "Poppins", sans-serif; /* Apply Poppins font */
+  font-size: 3vb;
+  font-weight: 500; /* Adjust font size */
+  color: #ffffff; /* Light color for the title */
+  text-align: left; /* Space between image and title */
+}
+@media (max-width: 1024px) {
+  .main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-title {
+    padding-inline: 5vw;
+  }
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-description {
+  font-size: 2vb; /* Adjusts the text size relative to viewport */
+  color: #cccccc; /* Light gray color for paragraph */
+  padding-inline: 1.5vw; /* Adds 1vw padding to the left and right */
+  text-align: left;
+}
+@media (max-width: 1024px) {
+  .main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-description {
+    padding-inline: 5vw;
+  }
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-description .learn-more {
+  color: #ff6666; /* A soft red color for Learn more link/text */
+  cursor: pointer;
+  font-family: "Poppins", sans-serif; /* Apply Poppins font */
+  font-size: 2vb;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-description .learn-more:hover {
+  color: #ff4444; /* Brighter red for hover effect */
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-description .vcm {
+  color: #ebd574;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-description .vcm:hover {
+  color: #dfbe2e; /* Brighter red for hover effect */
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-description .faid {
+  color: #639c93;
+}
+.main-card-page .unique-card-swiper-container .myUniqueCardSwiper .swiper-slide .card-ambulance .unique-card .card-description .faid:hover {
+  color: #3e615b; /* Brighter red for hover effect */
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  max-width: 100vw;
+  height: 10vw;
+  padding: 1vw;
+  overflow: hidden;
+  color: #f9f6ee;
+  border-top: 1px solid #212121;
+}
+@media only screen and (max-width: 1024px) {
+  footer {
+    height: 20vh;
+  }
+}
+footer .cover {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 79.8vw;
+  margin-left: auto;
+  margin-right: 9vw;
+  height: 100%;
+}
+footer .cover .qrcode img {
+  width: 12vb;
+  height: 12vb;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .qrcode img {
+    width: 12vb;
+    height: 12vb;
+  }
+}
+footer .cover .main {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .main {
+    width: 80%;
+  }
+}
+footer .cover .main .left {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  align-items: start;
+  padding: 1vw;
+  width: 50vw;
+  height: 12vh;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .main .left {
+    padding-left: 2vw;
+  }
+}
+footer .cover .main .left p {
+  padding: 0;
+  padding-bottom: 1.5vh;
+  margin: 0;
+  width: 12vw;
+  line-height: 1;
+  font-size: 2.6vb;
+  font-weight: 200;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .main .left p {
+    padding-bottom: 0;
+    font-size: 1.6vb;
+    width: 13vw;
+  }
+}
+footer .cover .main .left h6 {
+  font-weight: 700;
+  font-size: 2vb;
+  padding: 0;
+  margin: 0;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .main .left h6 {
+    font-size: 1.2vb;
+    text-align: left;
+  }
+}
+footer .cover .main .right {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  flex-direction: column;
+  align-items: end;
+  justify-content: right;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .main .right {
+    margin-top: auto;
+    margin-bottom: 4vh;
+  }
+}
+footer .cover .main .right h6 {
+  display: none;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .main .right h6 {
+    margin-right: 8vw;
+    display: block;
+    padding-bottom: 0;
+    margin-bottom: 1vh;
+  }
+}
+footer .cover .main .right a {
+  text-decoration: none;
+  color: #f9f6ee;
+  color: salmon;
+  font-weight: 200;
+  font-size: 2.2vb;
+  transition: all 0.3s ease-in-out;
+  line-height: 1.55;
+}
+footer .cover .main .right a:hover {
+  color: #f9f6ee;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .main .right a {
+    padding-bottom: 0.5vh;
+    font-size: 1.2vb;
+    margin-right: 8vw;
+    line-height: 1.2;
+  }
+}
+footer .cover .extra-info {
+  padding-left: 1vw;
+}
+footer .cover .extra-info h6 {
+  font-weight: 100;
+  text-align: right;
+  font-size: 1.5vb;
+  padding: 0;
+  margin: 0;
+  width: 7vw;
+}
+@media only screen and (max-width: 1024px) {
+  footer .cover .extra-info h6 {
+    display: none;
+  }
+}
+
+.notification-panel {
+  position: fixed;
+  top: 10vh;
+  right: 3vw;
+  height: auto;
+  width: 20vw;
+  background: #212121;
+  border: 1px solid #3f3f3f;
+  color: white;
+  overflow: hidden;
+  border-radius: 3vb;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  display: none; /* Initially hidden */
+  z-index: 1000;
+}
+.notification-panel .notification {
+  padding: 2vb;
+  background-color: #212121;
+  width: 100%;
+  min-height: 8vh;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+
+.profile:hover .bell-icon:hover ~ .notification-panel,
+.notification-panel:hover {
+  display: block;
+}
+
+.icon.mic-active {
+  background-color: #a54127;
+  color: #fefefe;
+}
+
+/*# sourceMappingURL=home.css.map */

@@ -1,0 +1,38 @@
+{% extends 'home.html' %} 
+{% block title %}
+ambulance-main
+{% endblock %}
+{% block header %}
+<header>
+  <nav>
+    <div class="logo">
+      <a href="{% url 'home' %}"><span>S</span>AFER</a>
+    </div>
+    <div class="profile">
+      <a href="#" class="icon">
+        <i class="fa-solid fa-user"></i>
+      </a>
+      <a href="#" class="icon bell-icon">
+        <i class="fa-solid fa-bell"></i>
+      </a>
+      <a href="#" class="icon" id="mic-icon">
+        <i class="fa-solid fa-microphone" onclick="startVoiceRecognition()"></i>
+      </a>
+      <div class="notification-panel">
+        <div class="notification">This is a test notification</div>
+      </div>
+    </div>
+  </nav>
+</header>
+{% endblock %}
+{% block content %}
+<input type="hidden" id="latitude" name="latitude" value="{{latitude}}" />
+<input type="hidden" id="longitude" name="longitude" value="{{longitude}}" />
+<div id="map"></div>
+<button class="call-emergency" title="Call Ambulance" onclick="callAmbulance()">
+    <i class="fas fa-ambulance"></i>
+</button>
+<!-- <button class="call-emergency" >🎙️ Use Voice Command</button> -->
+
+{% csrf_token %}
+{% endblock %}
