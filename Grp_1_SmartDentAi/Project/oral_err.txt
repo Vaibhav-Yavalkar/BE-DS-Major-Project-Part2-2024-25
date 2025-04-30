@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\MajorProject\Cursor\Dental_Treatment\Oral_Treatment_Final\app.py", line 15, in <module>
+    model = load_model('best_model.h5')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aryan\AppData\Local\Programs\Python\Python311\Lib\site-packages\keras\saving\saving_api.py", line 212, in load_model
+    return legacy_sm_saving_lib.load_model(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aryan\AppData\Local\Programs\Python\Python311\Lib\site-packages\keras\utils\traceback_utils.py", line 70, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "C:\Users\aryan\AppData\Local\Programs\Python\Python311\Lib\site-packages\keras\saving\legacy\save.py", line 230, in load_model
+    raise IOError(
+OSError: No file or directory found at best_model.h5

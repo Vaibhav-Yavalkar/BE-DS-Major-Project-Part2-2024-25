@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Video Consultation</h2>
+            <div class="alert alert-info">
+                <p>Consultation with {% if current_user.is_dentist %}Patient: {{ video_call.patient.username }}{% else %}Dr. {{ video_call.dentist.username }}{% endif %}</p>
+                <p>Specialty: {{ video_call.specialty }}</p>
+                <p>Scheduled for: {{ video_call.scheduled_time.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                {% if video_call.notes %}
+                <p>Notes: {{ video_call.notes }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div id="video-container" class="ratio ratio-16x9">
+                        <div id="local-video"></div>
+                        <div id="remote-video"></div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button id="join-btn" class="btn btn-primary me-2">
+                            <i class="bi bi-camera-video"></i> Join Call
+                        </button>
+                        <button id="leave-btn" class="btn btn-danger" disabled>
+                            <i class="bi bi-x-circle"></i> Leave Call
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Call Controls</h5>
+                    <div class="btn-group w-100 mb-3">
+                        <button id="mute-btn" class="btn btn-outline-secondary">
+                            <i class="bi bi-mic"></i> Mute
+                        </button>
+                        <button id="video-btn" class="btn btn-outline-secondary">
+                            <i class="bi bi-camera-video"></i> Video
+                        </button>
+                    </div>
+                    <div class="alert alert-warning">
+                        <small>
+                            <i class="bi bi-info-circle"></i> 
+                            Please ensure you have granted camera and microphone permissions.
+                        </small>
+                    </div>
+                    <div id="error-message" class="alert alert-danger d-none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.agora.io/sdk/release/AgoraRTC_N.js"></script>
+<script>
+    const appId = "{{ agora_app_id }}";
+    const channelName = "{{ video_call.video_call_room }}";
+    let rtc = {
+        client: null,
+        localAudioTrack: null,
+        localVideoTrack: null,
+    };
+    let isJoined = false;
+
+    // Initialize Agora client
+    rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+
+    // Handle user published
+    rtc.client.on("user-published", async (user, mediaType) => {
+        console.log("User published:", user, mediaType);
+        await rtc.client.subscribe(user, mediaType);
+        if (mediaType === "video") {
+            const remoteVideoTrack = user.videoTrack;
+            remoteVideoTrack.play("remote-video");
+        }
+        if (mediaType === "audio") {
+            user.audioTrack.play();
+        }
+    });
+
+    // Handle user unpublished
+    rtc.client.on("user-unpublished", async (user) => {
+        console.log("User unpublished:", user);
+        await rtc.client.unsubscribe(user);
+    });
+
+    // Handle errors
+    rtc.client.on("error", (error) => {
+        console.error("Agora client error:", error);
+        showError("Connection error: " + error.message);
+    });
+
+    // Join channel
+    async function joinChannel() {
+        try {
+            console.log("Joining channel:", channelName);
+            // Get token from server
+            const response = await fetch('/generate_token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ channel_name: channelName }),
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to generate token');
+            }
+            
+            const data = await response.json();
+            console.log("Token received:", data);
+            
+            // Join the channel
+            await rtc.client.join(appId, channelName, data.token, data.uid);
+            console.log("Successfully joined channel");
+            
+            // Create and publish local tracks
+            rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+            rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+            
+            // Play local video
+            rtc.localVideoTrack.play("local-video");
+            
+            // Publish tracks
+            await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
+            console.log("Successfully published tracks");
+            
+            isJoined = true;
+            document.getElementById('join-btn').disabled = true;
+            document.getElementById('leave-btn').disabled = false;
+        } catch (error) {
+            console.error("Error joining channel:", error);
+            showError("Error joining the call: " + error.message);
+        }
+    }
+
+    // Leave channel
+    async function leaveChannel() {
+        try {
+            console.log("Leaving channel");
+            // Stop all tracks
+            rtc.localAudioTrack?.close();
+            rtc.localVideoTrack?.close();
+            
+            // Leave the channel
+            await rtc.client.leave();
+            
+            isJoined = false;
+            document.getElementById('join-btn').disabled = false;
+            document.getElementById('leave-btn').disabled = true;
+        } catch (error) {
+            console.error("Error leaving channel:", error);
+            showError("Error leaving the call: " + error.message);
+        }
+    }
+
+    // Toggle mute
+    async function toggleMute() {
+        if (rtc.localAudioTrack) {
+            const muted = !rtc.localAudioTrack.muted;
+            await rtc.localAudioTrack.setMuted(muted);
+            document.getElementById('mute-btn').innerHTML = 
+                `<i class="bi bi-mic${muted ? '-mute' : ''}"></i> ${muted ? 'Unmute' : 'Mute'}`;
+        }
+    }
+
+    // Toggle video
+    async function toggleVideo() {
+        if (rtc.localVideoTrack) {
+            const enabled = !rtc.localVideoTrack.enabled;
+            await rtc.localVideoTrack.setEnabled(enabled);
+            document.getElementById('video-btn').innerHTML = 
+                `<i class="bi bi-camera-video${enabled ? '' : '-off'}"></i> ${enabled ? 'Video' : 'Enable Video'}`;
+        }
+    }
+
+    // Show error message
+    function showError(message) {
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.textContent = message;
+        errorDiv.classList.remove('d-none');
+    }
+
+    // Add event listeners
+    document.getElementById('join-btn').addEventListener('click', joinChannel);
+    document.getElementById('leave-btn').addEventListener('click', leaveChannel);
+    document.getElementById('mute-btn').addEventListener('click', toggleMute);
+    document.getElementById('video-btn').addEventListener('click', toggleVideo);
+</script>
+{% endblock %} 

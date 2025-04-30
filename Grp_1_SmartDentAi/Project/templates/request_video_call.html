@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Request Video Consultation</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="specialty" class="form-label">Select Specialty</label>
+                        <select class="form-select" id="specialty" name="specialty" required>
+                            <option value="">Choose a specialty...</option>
+                            {% for specialty in specialties %}
+                            <option value="{{ specialty }}">{{ specialty }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dentist_id" class="form-label">Select Dentist</label>
+                        <select class="form-select" id="dentist_id" name="dentist_id" required disabled>
+                            <option value="">Choose a dentist...</option>
+                            {% for dentist in dentists %}
+                            <option value="{{ dentist.id }}" data-specialty="{{ dentist.specialty }}">
+                                Dr. {{ dentist.username }} ({{ dentist.specialty }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes (Optional)</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3" 
+                                placeholder="Please describe your dental concern..."></textarea>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Request Video Call</button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    // Filter dentists by specialty
+    document.getElementById('specialty').addEventListener('change', function() {
+        const selectedSpecialty = this.value;
+        const dentistSelect = document.getElementById('dentist_id');
+        const options = dentistSelect.getElementsByTagName('option');
+        
+        // Reset and disable dentist select
+        dentistSelect.value = '';
+        dentistSelect.disabled = !selectedSpecialty;
+        
+        // Show/hide dentists based on specialty
+        for (let i = 1; i < options.length; i++) {
+            const option = options[i];
+            if (selectedSpecialty === '' || option.dataset.specialty === selectedSpecialty) {
+                option.style.display = '';
+            } else {
+                option.style.display = 'none';
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %} 
