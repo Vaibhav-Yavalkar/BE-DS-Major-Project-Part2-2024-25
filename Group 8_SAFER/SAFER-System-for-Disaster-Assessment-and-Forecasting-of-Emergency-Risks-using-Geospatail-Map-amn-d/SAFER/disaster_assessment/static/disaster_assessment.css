@@ -1,0 +1,113 @@
+.generate-report {
+  position: absolute; /* Keeps it in place */
+  top: 10vh; /* Distance from the top */
+  right: 10px; /* Distance from the right */
+  background-color: #ffffff;
+  color: #b9b9b9;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+  z-index: 1000; /* Ensures it stays above other elements */
+  transition: all 0.3s ease-in-out;
+}
+
+.generate-report:hover {
+  background-color: #b9b9b9;
+  color: white;
+}
+
+/* Make the icon a little bigger */
+.generate-report i {
+  font-size: 21px;
+  color: #b9b9b9;
+  transition: all 0.3s ease-in-out;
+}
+.generate-report i:hover {
+  background-color: #b9b9b9;
+  color: white;
+}
+
+.view-assessment {
+  position: absolute;
+  top: 18vh;
+  right: 10px;
+  background-color: #ffffff;
+  color: #f0f0f0;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  gap: 8px;
+  transition: all 0.3s ease-in-out;
+}
+
+.view-assessment i {
+  font-size: 21px;
+  color: #b9b9b9;
+  transition: all 0.3s ease-in-out;
+}
+
+.view-assessment:hover {
+  background-color: #333;
+  color: white;
+}
+
+/* Dropdown Menu */
+.assessment-dropdown {
+  position: absolute;
+  top: 100%; /* Position right below the button */
+  right: 0;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  display: none;
+  z-index: 1000;
+  padding: 10px;
+  width: 220px;
+}
+
+.assessment-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.assessment-dropdown ul li {
+  padding: 8px 10px;
+}
+
+.assessment-dropdown ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  display: block;
+  transition: 0.3s;
+}
+
+.assessment-dropdown ul li a:hover {
+  background-color: #f0f0f0;
+  color: black;
+}
+
+/* Ensure the dropdown shows when hovering over either the button or the dropdown */
+.folium-map {
+  position: relative; /* Make sure the button and dropdown are in the same container */
+}
+
+.folium-map:hover .assessment-dropdown,
+.view-assessment:hover + .assessment-dropdown {
+  display: block;
+}
+
+/*# sourceMappingURL=disaster_assessment.css.map */

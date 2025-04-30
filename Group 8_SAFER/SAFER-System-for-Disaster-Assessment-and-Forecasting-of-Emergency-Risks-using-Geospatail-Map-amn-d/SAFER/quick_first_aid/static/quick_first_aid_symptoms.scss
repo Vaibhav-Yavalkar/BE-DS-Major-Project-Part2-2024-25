@@ -1,0 +1,314 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+  backdrop-filter: blur(2vb);
+}
+
+.form-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-inline: 3vw;
+  padding-top: 0.5vh;
+  background: #060606;
+  color: #f9f6ee;
+  border: 1px solid #262626;
+  border-radius: 6vb;
+  box-shadow: 0 4vb 8vb rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 1000;
+  width: 46vw;
+  height: 68vh;
+  .symptom-list-cover {
+    // background-color: red;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5vw;
+    max-height: 30vh;
+    overflow-y: auto;
+    padding: 1vb;
+  }
+  h1 {
+    font-size: 7vb;
+    font-weight: 600;
+    letter-spacing: -0.2vb;
+    line-height: 6.5vb;
+    span {
+      color: #b0b0b0;
+    }
+  }
+  .close-button {
+    @media only screen and (max-width: 700px) {
+      margin-right: 2vw;
+      margin-top: 1vh;
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-right: 2.5vw;
+    margin-top: 5vh;
+    position: fixed;
+    border: 1px solid #262626;
+    border-radius: 100%;
+    background-color: #141414;
+    color: #e09191;
+    width: 4vb;
+    height: 4vb;
+    top: 0%;
+    right: 0%;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    &:hover {
+      background-color: #262626;
+      color: #b73838;
+    }
+  }
+  button {
+    @media only screen and (max-width: 700px) {
+      left: 27s vw;
+      padding: 2.5vb 6vb;
+      // padding: ;
+    }
+    text-decoration: none;
+    color: #f9f6ee;
+    text-wrap: nowrap;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #212121;
+    border-radius: 5vb;
+    font-size: 2.4vb;
+    background-color: #f9f6ee;
+    color: #060606;
+    padding: 2.5vb 4vb;
+    font-weight: 500;
+    position: fixed;
+    cursor: pointer;
+    transform: translateX(-50%);
+    bottom: 4vh;
+    left: 6vw;
+    &:hover {
+      background-color: #060606;
+      color: #f9f6ee;
+    }
+  }
+}
+@media only screen and (max-width: 700px) {
+  .form-container {
+    padding-inline: 4vw;
+    padding-top: 1vh;
+    border-radius: 2rem;
+  }
+
+  .form-container h1 {
+    font-size: 2rem;
+    width: 100%;
+    letter-spacing: -0.05rem;
+    line-height: 1;
+    margin: 1rem 0;
+  }
+}
+
+.form-container button {
+  margin-top: 10px;
+}
+
+.form-result-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 6vh;
+  width: 75vw;
+  height: 39vh;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='45' ry='45' stroke='%23B0B0B0FF' stroke-width='2' stroke-dasharray='21%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border-radius: 45px;
+  padding-inline: 3vw;
+  padding-top: 0.5vh;
+  overflow: hidden;
+  @media only screen and (max-width: 700px) {
+    height: auto;
+    flex-direction: column;
+  }
+  .form-result-container-inner {
+    width: 20vw;
+    margin-bottom: 5vh;
+    p {
+      margin: 0;
+      width: 20vw;
+      text-align: left;
+      font-weight: 100;
+      font-size: 2.4vb;
+    }
+    @media only screen and (max-width: 700px) {
+      p {
+        display: flex;
+        align-items: start;
+        // background-color: blue;
+        width: 83vw;
+        overflow: hidden;
+        height: 50%;
+      }
+    }
+  }
+  h1 {
+    font-size: 7vb;
+    font-weight: 600;
+    letter-spacing: -0.2vb;
+    line-height: 6.5vb;
+    span {
+      color: #b0b0b0;
+    }
+    @media only screen and (max-width: 700px) {
+    }
+  }
+}
+
+#diseaseResults {
+  @media only screen and (max-width: 700px) {
+    // background-color: red;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 4vh;
+  }
+  ul {
+    // background-color: red;
+    list-style: none;
+    display: flex;
+    gap: 2vw;
+    @media only screen and (max-width: 700px) {
+      width: 100%;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+      // color: navajowhite;
+      div {
+        @media only screen and (max-width: 700px) {
+          width: fit-content;
+        }
+      }
+    }
+    @media only screen and (max-width: 700px) {
+      // background-color: red;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      gap: 4vw;
+      flex-direction: column;
+    }
+    li {
+      .diagnosisCard {
+        @media only screen and (max-width: 700px) {
+          width: 100%;
+        }
+        // border: 1px solid #802d58;
+        // border-radius: 6vb;
+        height: 33vh;
+        width: 16.3vw;
+        display: flex;
+        flex-direction: column;
+        h1 {
+          font-size: 4.8vb;
+          margin-top: 4vh;
+          padding-left: 1.5vw;
+          padding-right: 1.5vw;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          overflow: auto;
+          white-space: normal;
+          max-width: 14vw;
+          font-weight: 500;
+          line-height: 1;
+          letter-spacing: -0.1vb;
+          max-height: 12vh;
+          margin-bottom: 1.5vh;
+        
+          /* Hide scrollbar but allow scrolling */
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* Internet Explorer and Edge */
+        
+          &::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+          }
+          @media only screen and (max-width: 700px) {
+            max-width: 100vw;
+            padding-left: 6vw;
+          }
+        }
+        p {
+          margin-top: 10;
+          font-size: 2.5vb;
+          font-weight: 300;
+          width: 13.5vw;
+          // background-color: red;
+          letter-spacing: -0.1vb;
+          overflow: scroll;
+          word-spacing: 0.5vb;
+          margin-left: 1.5vw;
+          margin-right: 1.5vw;
+          height: 14vh;
+          margin-bottom: 0;
+                  
+          /* Hide scrollbar but allow scrolling */
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* Internet Explorer and Edge */
+        
+          &::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+          }
+          @media only screen and (max-width: 700px) {
+            max-width: 100vw;
+            padding-left: 6vw;
+          }
+        }
+        @media only screen and (max-width: 700px) {
+          justify-content: center;
+          align-items: center;
+          flex-direction: row;
+          width: 65vw;
+        }
+      }
+    }
+  }
+}
+
+@mixin disease-card($bg-color, $text-color) {
+  border-radius: 6vb;
+  height: 33vh;
+  width: 16.3vw;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  overflow: hidden;
+  background-color: $bg-color;
+  color: $text-color;
+  margin-bottom: 0;
+  // border: 1px solid darken($bg-color, 5%);
+}
+
+#diseaseResultList {
+  li:nth-child(1) {
+    @media only screen and (max-width: 700px) {
+      width: 100%;
+    }
+    @include disease-card(#e42f90, #fbbef5);
+  }
+
+  li:nth-child(2) {
+    @media only screen and (max-width: 700px) {
+      width: 100%;
+    }
+    @include disease-card(#bbc41d, #31711e);
+  }
+
+  li:nth-child(3) {
+    @media only screen and (max-width: 700px) {
+      width: 100%;
+    }
+    @include disease-card(#ccb4f0, #6e58b6);
+  }
+}

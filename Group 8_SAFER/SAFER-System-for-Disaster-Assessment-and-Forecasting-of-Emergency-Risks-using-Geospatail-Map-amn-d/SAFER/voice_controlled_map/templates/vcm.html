@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MapmyIndia Autocomplete with Voice Control and Layers</title>
+    <style>
+        /* Set the size of the map */
+        #map {
+            height: 900px;
+            width: 100%;
+            position: relative; /* Position relative for absolute elements */
+        }
+        /* Style the SOS button */
+        #sos-button {
+            position: absolute;
+            top: 10px; /* Position from the top */
+            right: 10px; /* Position from the right */
+            padding: 10px 20px; /* Padding for the button */
+            background-color: red; /* Red background color */
+            color: white; /* White text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            font-size: 16px; /* Font size */
+            cursor: pointer; /* Pointer cursor */
+        }
+        /* Style the input field */
+        #pac-input {
+            margin-top: 10px;
+            width: 300px;
+            padding: 5px;
+            font-size: 14px;
+        }
+        #status {
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <button id="sos-button" onclick="sendSOS()">SOS</button>
+    <input id="pac-input" type="text" placeholder="Search for a place">
+    <div id="status">Say commands like "Zoom in", "Zoom out", "Show Delhi", "Show New York", "Show nearest hospital".</div>
+    <div id="map"></div>
+
+    <!-- Load the MapmyIndia Maps JavaScript SDK -->
+    <script async defer src="https://apis.mapmyindia.com/advancedmaps/v1/3304f5d4f7a5744d4281b58c050ae0fd/map_load?layer=vector&v=3.0"></script>
+    
+    <script>
+        let map;
+
+        function initMap() {
+            map = new MapmyIndia.Map('map', {
+                center: [28.6139, 77.2090], // Default to New Delhi
+                zoomControl: true,
+                hybrid: true,
+                zoom: 14
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    
+                    const userLocation = [position.coords.latitude, position.coords.longitude];
+                    // const userLocation = [19.10598,73.0077729];
+                    map.setView(userLocation, 14);
+
+                    // Create a red marker icon
+                    const redIcon = L.icon({
+                        iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png', // URL for the red icon
+                        iconSize: [45, 45], // Size of the icon
+                        iconAnchor: [16, 32], // Point where the icon is anchored
+                        popupAnchor: [0, -32]  // Point where the popup is anchored relative to the icon
+                    });
+
+                    // Add the red marker for user's location
+                    new L.marker(userLocation, { icon: redIcon }).addTo(map).bindPopup('You are here').openPopup();
+
+                    initializeAutocomplete();
+                    initializeVoiceControl();
+                }, () => {
+                    handleLocationError(true);
+                });
+            } else {
+                handleLocationError(false);
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation) {
+            const defaultLocation = [28.6139, 77.2090]; // Default to New Delhi
+            map.setView(defaultLocation, 14);
+
+            document.getElementById('status').innerText = browserHasGeolocation
+                ? "Error: The Geolocation service failed."
+                : "Error: Your browser doesn't support geolocation.";
+
+            initializeAutocomplete();
+            initializeVoiceControl();
+        }
+
+        // Using HTML5's 'datalist' to provide autocomplete options instead
+        function initializeAutocomplete() {
+            const input = document.getElementById('pac-input');
+
+            input.addEventListener('change', function () {
+                const place = input.value;
+                geocodeLocation(place);
+            });
+        }
+
+        // Initialize voice control using the Web Speech API
+        function initializeVoiceControl() {
+            const statusElement = document.getElementById('status');
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.continuous = true;
+
+            recognition.onstart = () => {
+                statusElement.innerText = "Listening for commands...";
+                console.log("Voice recognition started");
+            };
+
+            recognition.onresult = (event) => {
+                const speechToText = event.results[event.resultIndex][0].transcript.toLowerCase().trim();
+                statusElement.innerText = `You said: "${speechToText}"`;
+                console.log("Recognized speech:", speechToText);
+                handleCommand(speechToText);
+            };
+
+            recognition.onerror = (event) => {
+                statusElement.innerText = `Error: ${event.error}`;
+                console.log("Voice recognition error:", event.error);
+            };
+
+            recognition.onend = () => {
+                statusElement.innerText = "Voice recognition ended, restarting...";
+                console.log("Voice recognition ended, restarting");
+                recognition.start(); // Restart recognition after it ends
+            };
+
+            recognition.start();
+        }
+
+        // Handle voice commands for map layers, zoom, and location search
+        function handleCommand(command) {
+            console.log("Handling command:", command); // Debugging log
+            switch (command) {
+                case "zoom in":
+                    map.setZoom(map.getZoom() + 1);  // Increment zoom level
+                    break;
+                case "zoom out":
+                    map.setZoom(map.getZoom() - 1);  // Decrement zoom level
+                    break;
+                case "pan up":
+                    map.panBy([0, 100]);
+                    break;
+                case "pan down":
+                    map.panBy([0, -100]);
+                    break;
+                case "pan left":
+                    map.panBy([-100, 0]);
+                    break;
+                case "pan right":
+                    map.panBy([100, 0]);
+                    break;
+                case "show nearest hospital":
+                    showNearestHospital();
+                    break;
+                default:
+                    if (command.startsWith("show ")) {
+                        const location = command.replace("show ", "");
+                        geocodeLocation(location);
+                    } else {
+                        document.getElementById('status').innerText = `Command not recognized: "${command}"`;
+                        console.log("Command not recognized:", command);
+                    }
+                    break;
+            }
+        }
+
+        // Function to show the nearest hospitals
+        function showNearestHospital() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const userLocation = [position.coords.latitude, position.coords.longitude];;
+                    findNearbyHospitals(userLocation);
+                }, () => {
+                    document.getElementById('status').innerText = "Geolocation failed. Unable to find nearby hospitals.";
+                });
+            } else {
+                document.getElementById('status').innerText = "Geolocation not supported by your browser.";
+            }
+        }
+
+        // Use the Overpass API to find nearby hospitals
+        function findNearbyHospitals(userLocation) {
+            const [lat, lon] = userLocation;
+            const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json];node["amenity"="hospital"](around:1500,${lat},${lon});out;`;
+
+            fetch(overpassUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.elements && data.elements.length > 0) {
+                        map.setView(userLocation, 14);
+                        data.elements.forEach(hospital => {
+                            const hospitalLocation = [hospital.lat, hospital.lon];
+                            const hospitalName = hospital.tags.name || "Unnamed Hospital";
+                            
+                            // Get the full address using reverse geocoding
+                            reverseGeocode(hospitalLocation, (address) => {
+                                const popupContent = `<b>${hospitalName}</b><br>${address}`;
+                                
+                                // Add marker for the hospital with the full address
+                                new L.marker(hospitalLocation).addTo(map).bindPopup(popupContent).openPopup();
+                            });
+                        });
+                        document.getElementById('status').innerText = `Showing nearest hospitals.`;
+                    } else {
+                        document.getElementById('status').innerText = "No hospitals found nearby.";
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('status').innerText = "Error fetching hospital data.";
+                    console.error("Error fetching hospital data:", error);
+                });
+        }
+
+        // Reverse geocode to get the full address
+        function reverseGeocode(latlon, callback) {
+            const [lat, lon] = latlon;
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const address = data.display_name || 'Address not found';
+                    callback(address);
+                })
+                .catch(error => {
+                    console.error("Error fetching address:", error);
+                    callback('Address not available');
+                });
+        }
+
+        // Geocode the location name using an external API (Nominatim)
+        function geocodeLocation(locationName) {
+            const encodedLocation = encodeURIComponent(locationName);
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedLocation}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const location = [data[0].lat, data[0].lon]; // OpenStreetMap returns lat/lon
+                        map.setView(location, 14);
+                        new L.marker(location).addTo(map).bindPopup(locationName).openPopup();
+                    } else {
+                        document.getElementById('status').innerText = 'Geocode was not successful.';
+                        console.log("Geocode failed for location:", locationName);
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('status').innerText = 'Geocoding error.';
+                    console.error("Geocoding error:", error);
+                });
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>

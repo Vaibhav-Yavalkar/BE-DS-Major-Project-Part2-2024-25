@@ -1,0 +1,289 @@
+{% extends 'home.html' %} 
+{% block title %}
+  quick_first_aid
+{% endblock %} 
+{%block header %} 
+<header style="position: relative; top: 0; left: 0;  z-index: 0;">
+  <nav>
+    <div class="logo">
+      <a href="{% url 'home' %}"><span>S</span>AFER</a>
+    </div>
+    <div class="profile">
+      <a href="#" class="icon">
+        <i class="fa-solid fa-user"></i>
+      </a>
+      <a href="#" class="icon">
+        <i class="fa-solid fa-bell"></i>
+      </a>
+      <a href="#" class="icon" id="micButton" onclick="startSpeechRecognition()">
+        <i class="fa-solid fa-microphone"></i>
+      </a>
+    </div>
+  </nav>
+</header>
+{% endblock %} 
+{%block content %}
+<div class="home">
+  <div class="innerhome">
+    <div class="title">
+      <h1>First Aid Now</h1>
+    </div>
+    <div class="desc">
+      <p>
+        By using this, you are agreeing to our terms and services. Team Safer
+        will not be responsible for any damage that may occur. Observe the
+        symptoms of your patient carefully, and proceed by selecting the
+        'Symptoms' button below..
+      </p>
+    </div>
+
+    <div class="main-button">
+      <a href="#" onclick="openForm()">Select Symptoms</a>
+    </div>
+
+    <div id="overlay" class="overlay"></div>
+    <div id="symptomForm" class="form-container" style="display: none">
+      <h1>Select 
+        <br/>
+        <span>Symptoms<span>
+      </h1>
+      <a href="#" class="close-button" onclick="closeForm()">
+        <i class="fa-solid fa-xmark"></i>
+      </a>
+
+      <form method="post" id="mainFormSymptom">
+        <div class="symptom-list-cover">
+        {% csrf_token %} 
+        {% for symptom in symptoms %}
+        <label>
+          <input type="checkbox" name="symptom" value="{{ symptom.id }}"/> {{symptom.name }} 
+        </label>
+        <br/>
+        {% endfor %}
+        <button type="submit" id="submitButton" onclick="openFormResult()">Submit</button>
+      </div>
+      </form>
+    </div>
+
+    <div id="symptomFormResult" class="form-result-container" style="position: relative;">
+      <div class="form-result-container-inner">
+        <h1>Possible 
+          <br/>
+          <span>Diagnoses<span>
+        </h1>
+        <p>
+          Kindly select the symptoms from the options above to receive a diagnosis.
+        </p>
+      </div>
+      {% if diseases %}
+      <div id="diseaseResults">
+        <ul id="diseaseResultList">
+          {% for disease in diseases %}
+          <li>
+            <a href="{{ disease.web_links }}" target="_blank" class="diagnosisCard">
+              <div>
+                <h1>{{ disease.disease }}</h1>
+                <p>{{ disease.description }}</p>
+              </div>
+            </a>
+          </li>          
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+
+
+    <!--Slider-->
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <!--card-->
+          <div class="c1">
+            <div class="card-title">
+              <a href="#">Symptoms of Pulmonary edema</a>
+            </div>
+            <div class="card-text">
+              <h1>
+                Understanding <br />
+                Pulmonary edema
+              </h1>
+            </div>
+            <div class="card-para">
+              <p>
+                Pulmonary edema is fluid buildup in the lungs, causing breathing difficulty.<br />
+                <br />
+              </p>
+            </div>
+            <div class="card-button">
+              <a href="https://www.youtube.com/watch?v=3Y5sO2REU2o" target="_blank" rel="noopener noreferrer">Treat Now</a>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="c2">
+            <!--card content-->
+            <div class="card-title">
+              <a href="#">Symptoms of Infection </a>
+            </div>
+            <div class="card-text">
+              <h1>
+                Cuts and<br />
+                Wound Infections
+              </h1>
+            </div>
+            <div class="card-para">
+              <p>
+                A cut or wound can become infected if bacteria enters, causing redness,<br/> swelling, and pain. Proper cleaning and care help <br/>prevent complications
+              </p>
+            </div>
+            <div class="card-button">
+              <a href="https://youtu.be/wEc4tYpxSig?t=101" target="_blank" rel="noopener noreferrer">Wound Care Steps</a>
+            </div>
+            <!---->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="c3">
+            <div class="card-title">
+              <a href="#">Symptoms of Electrocution</a>
+            </div>
+            <div class="card-text">
+              <h1>
+                Understanding <br />
+                Electrocution
+              </h1>
+            </div>
+            <div class="card-para">
+              <p>
+                Electrocution occurs when the body comes into contact with a harmful <br/>electric current, causing burns, muscle spasms, or loss of <br />consciousness.
+              </p>
+            </div>
+            <div class="card-button">
+              <a href="https://youtu.be/luTRnCoeD4c?t=20" target="_blank" rel="noopener noreferrer">First Aid Steps</a>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="c4">
+            <div class="card-title">
+              <a href="#">Identify Fractures</a>
+            </div>
+            <div class="card-text">
+              <h1>Understanding Fracture First Aid</h1>
+            </div>
+            <div class="card-para">
+              <p>
+                A fracture is a break in the bone, often caused by falls or heavy impact.<br />
+                It can lead to pain, swelling, and difficulty in movement, needing <br />proper care.
+              </p>
+            </div>
+            <div class="card-button">
+              <a href="https://youtu.be/Gm6NmuQP-L0?t=14" target="_blank" rel="noopener noreferrer">Care Steps</a>
+            </div>
+          </div>
+        </div>
+        <!-- Add more swiper slides here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Simple stemmer function
+  function stemWord(word) {
+    // Remove common suffixes
+    if (word.endsWith('ing')) return word.slice(0, -3);
+    if (word.endsWith('ed')) return word.slice(0, -2);
+    if (word.endsWith('s')) return word.slice(0, -1);
+    if (word.endsWith('es')) return word.slice(0, -2);
+    return word;
+  }
+
+  function startSpeechRecognition() {
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    let recognition = new webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.start();
+
+    recognition.onresult = function (event) {
+      let transcript = event.results[0][0].transcript.toLowerCase().trim();
+
+      // Remove punctuation from transcript
+      transcript = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+      
+      console.log("Original Speech: ", transcript);
+      
+      // Split transcript into words and stem each word
+      let words = transcript.split(' ');
+      let stemmedWords = words.map(word => stemWord(word));
+      let stemmedTranscript = stemmedWords.join(' ');
+      
+      console.log("Stemmed Speech: ", stemmedTranscript);
+
+      let checkboxes = document.querySelectorAll('input[name="symptom"]');
+      let matched = false;
+
+      checkboxes.forEach((checkbox) => {
+        let symptomLabel = checkbox.parentNode.innerText.toLowerCase().trim();
+        
+        // Stem the symptom label words
+        let symptomWords = symptomLabel.split(' ');
+        let stemmedSymptomWords = symptomWords.map(word => stemWord(word));
+        let stemmedSymptom = stemmedSymptomWords.join(' ');
+        
+        // Check if any stemmed word from the transcript matches the stemmed symptom
+        const stemmedTranscriptWords = stemmedTranscript.split(' ');
+        
+        // Check for partial matches using stemmed words
+        let isMatch = false;
+        for (let i = 0; i < stemmedTranscriptWords.length; i++) {
+          if (stemmedSymptom.includes(stemmedTranscriptWords[i]) || 
+              stemmedTranscriptWords[i].includes(stemmedSymptom)) {
+            isMatch = true;
+            break;
+          }
+        }
+        
+        // Also check if full stemmed symptom is in the transcript
+        if (stemmedTranscript.includes(stemmedSymptom)) {
+          isMatch = true;
+        }
+        
+        if (isMatch) {
+          checkbox.checked = true;
+          matched = true;
+          console.log("Matched symptom:", symptomLabel);
+        }
+      });
+
+      if (matched) {
+        setTimeout(() => {
+          document.getElementById("mainFormSymptom").submit();
+        }, 1000); // Submit after 1 second for UI update
+      } else {
+        alert("No matching symptoms found. Try speaking clearly.");
+      }
+    };
+
+    recognition.onerror = function (event) {
+      console.error("Speech recognition error:", event.error);
+    };
+
+    recognition.onend = function () {
+      console.log("Speech recognition ended.");
+    };
+  }
+</script>
+
+
+
+
+{% endblock %}
