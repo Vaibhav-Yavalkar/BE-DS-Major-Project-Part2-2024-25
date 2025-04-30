@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crop Data Entry - CropSync</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      padding: 40px;
+      color: #333;
+    }
+    h2 {
+      color: #4b7bec;
+    }
+    form {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
+      max-width: 400px;
+    }
+    label {
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4b7bec;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>🌿 Add Crop Sowing Data</h2>
+
+  <form id="cropForm">
+    <label>Crop Name:</label>
+    <input type="text" id="cropName" required>
+
+    <label>Sowing Date:</label>
+    <input type="date" id="sowingDate" required>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    const contractABI = [
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+        "name": "farmers",
+        "outputs": [
+          { "internalType": "string", "name": "name", "type": "string" },
+          { "internalType": "string", "name": "location", "type": "string" },
+          { "internalType": "uint256", "name": "landSize", "type": "uint256" },
+          { "internalType": "bool", "name": "registered", "type": "bool" }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
+        "name": "inspector",
+        "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+        "name": "journeys",
+        "outputs": [
+          { "internalType": "string", "name": "cropName", "type": "string" },
+          { "internalType": "string", "name": "sowingDate", "type": "string" },
+          { "internalType": "string", "name": "monitoringNotes", "type": "string" },
+          { "internalType": "string", "name": "pesticideUsed", "type": "string" },
+          { "internalType": "string", "name": "pesticideDate", "type": "string" },
+          { "internalType": "bool", "name": "inspected", "type": "bool" },
+          { "internalType": "bool", "name": "approved", "type": "bool" },
+          { "internalType": "string", "name": "yieldDate", "type": "string" },
+          { "internalType": "bool", "name": "badgeGenerated", "type": "bool" }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          { "internalType": "string", "name": "_name", "type": "string" },
+          { "internalType": "string", "name": "_location", "type": "string" },
+          { "internalType": "uint256", "name": "_landSize", "type": "uint256" }
+        ],
+        "name": "registerFarmer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "string", "name": "_cropName", "type": "string" },
+          { "internalType": "string", "name": "_sowingDate", "type": "string" }
+        ],
+        "name": "addSowingData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [{ "internalType": "string", "name": "_notes", "type": "string" }],
+        "name": "addMonitoringNotes",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "string", "name": "_pesticideUsed", "type": "string" },
+          { "internalType": "string", "name": "_date", "type": "string" }
+        ],
+        "name": "addPesticideData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          { "internalType": "address", "name": "farmerAddress", "type": "address" },
+          { "internalType": "bool", "name": "_approved", "type": "bool" }
+        ],
+        "name": "inspectCrop",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [{ "internalType": "string", "name": "_yieldDate", "type": "string" }],
+        "name": "addYieldData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "generateBadge",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [{ "internalType": "address", "name": "farmerAddress", "type": "address" }],
+        "name": "getCropJourney",
+        "outputs": [
+          { "internalType": "string", "name": "", "type": "string" },
+          { "internalType": "string", "name": "", "type": "string" },
+          { "internalType": "string", "name": "", "type": "string" },
+          { "internalType": "string", "name": "", "type": "string" },
+          { "internalType": "string", "name": "", "type": "string" },
+          { "internalType": "bool", "name": "", "type": "bool" },
+          { "internalType": "bool", "name": "", "type": "bool" },
+          { "internalType": "string", "name": "", "type": "string" },
+          { "internalType": "bool", "name": "", "type": "bool" }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [{ "internalType": "address", "name": "_farmerAddress", "type": "address" }],
+        "name": "getFarmer",
+        "outputs": [
+          { "internalType": "string", "name": "", "type": "string" },
+          { "internalType": "string", "name": "", "type": "string" },
+          { "internalType": "uint256", "name": "", "type": "uint256" },
+          { "internalType": "bool", "name": "", "type": "bool" }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      }
+    ];
+
+    const contractAddress = "0x41470E8f446D234e2FD8E86d00e311d3624b5037";
+
+    let web3;
+    let contract;
+    let currentAccount;
+
+    window.addEventListener("load", async () => {
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+        await ethereum.request({ method: "eth_requestAccounts" });
+
+        const accounts = await web3.eth.getAccounts();
+        currentAccount = accounts[0];
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        document.getElementById("cropForm").addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const cropName = document.getElementById("cropName").value;
+          const sowingDate = document.getElementById("sowingDate").value;
+
+          try {
+            await contract.methods.addSowingData(cropName, sowingDate).send({ from: currentAccount });
+            document.getElementById("status").innerText = "✅ Crop sowing data added!";
+          } catch (err) {
+            console.error(err);
+            document.getElementById("status").innerText = "❌ Error: " + err.message;
+          }
+        });
+      } else {
+        alert("Please install MetaMask to interact with this DApp.");
+      }
+    });
+  </script>
+</body>
+</html>

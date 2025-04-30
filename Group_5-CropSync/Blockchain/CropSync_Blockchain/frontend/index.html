@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CropSync Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      padding: 40px;
+      color: #333;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+      max-width: 500px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #1e88e5;
+    }
+
+    .card button {
+      background-color: #1e88e5;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .card button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h2>👨‍🌾 Welcome to CropSync Farmer Dashboard</h2>
+
+  <div class="card">
+    <h3>1️⃣ Register as Farmer</h3>
+    <p id="registerStatus">Checking registration...</p>
+    <button id="registerBtn" onclick="goTo('register.html')">Register Now</button>
+  </div>
+
+  <div class="card">
+    <h3>2️⃣ Add Crop Information</h3>
+    <p id="cropStatus">Waiting for registration...</p>
+    <button id="cropBtn" disabled onclick="goTo('crop.html')">Add Crop Info</button>
+  </div>
+
+  <div class="card">
+    <h3>3️⃣ Add Monitoring Notes</h3>
+    <p id="monitorStatus">Add observations to monitor crop health.</p>
+    <button onclick="goTo('monitor.html')">Add Notes</button>
+  </div>
+
+  <div class="card">
+    <h3>4️⃣ Log Pesticide Usage</h3>
+    <p>Record what pesticides you have used and when.</p>
+    <button onclick="goTo('pesticide.html')">Log Pesticide</button>
+  </div>
+
+  <div class="card">
+    <h3>5️⃣ Submit Harvest Details</h3>
+    <p>Submit quantity and date of harvest after approval.</p>
+    <button onclick="goTo('yield.html')">Submit Yield</button>
+  </div>
+
+  <div class="card">
+    <h3>6️⃣ Generate Sustainability Badge</h3>
+    <p>After approval, generate your sustainability badge.</p>
+    <button onclick="goTo('generate.html')">Generate Badge</button>
+  </div>
+
+  <script>
+    let contract;
+    let account;
+    const contractAddress = "0x41470E8f446D234e2FD8E86d00e311d3624b5037";
+    const contractABI = [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "farmers",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "location",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "landSize",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "registered",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "inspector",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "journeys",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "cropName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "sowingDate",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "monitoringNotes",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "pesticideUsed",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "pesticideDate",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "inspected",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        },
+        {
+          "internalType": "string",
+          "name": "yieldDate",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "badgeGenerated",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_location",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_landSize",
+          "type": "uint256"
+        }
+      ],
+      "name": "registerFarmer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_cropName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_sowingDate",
+          "type": "string"
+        }
+      ],
+      "name": "addSowingData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_notes",
+          "type": "string"
+        }
+      ],
+      "name": "addMonitoringNotes",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_pesticideUsed",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_date",
+          "type": "string"
+        }
+      ],
+      "name": "addPesticideData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "farmerAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_approved",
+          "type": "bool"
+        }
+      ],
+      "name": "inspectCrop",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_yieldDate",
+          "type": "string"
+        }
+      ],
+      "name": "addYieldData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "generateBadge",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "farmerAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getCropJourney",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_farmerAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getFarmer",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    }
+  ];
+
+    async function init() {
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        await window.ethereum.enable();
+        const accounts = await web3.eth.getAccounts();
+        account = accounts[0];
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        const farmer = await contract.methods.getFarmer(account).call();
+
+        if (farmer.registered) {
+          document.getElementById("registerStatus").innerText = "✅ Registered as " + farmer.name;
+          document.getElementById("registerBtn").disabled = true;
+          document.getElementById("cropStatus").innerText = "Ready to add crop info.";
+          document.getElementById("cropBtn").disabled = false;
+        } else {
+          document.getElementById("registerStatus").innerText = "❌ Not registered yet.";
+          document.getElementById("cropStatus").innerText = "🚫 Please register first.";
+        }
+      } else {
+        alert("MetaMask not found. Please install it to use CropSync.");
+      }
+    }
+
+    function goTo(page) {
+      window.location.href = page;
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

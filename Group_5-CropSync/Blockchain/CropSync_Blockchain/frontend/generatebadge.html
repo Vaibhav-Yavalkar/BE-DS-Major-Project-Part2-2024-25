@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Sustainability Badge</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      padding: 40px;
+      color: #333;
+    }
+
+    h2 {
+      color: #28a745;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #msg {
+      margin-top: 20px;
+      font-weight: 500;
+    }
+
+    .badge {
+      border: 2px solid #28a745;
+      border-radius: 20px;
+      padding: 20px;
+      width: 300px;
+      background-color: #f0fff4;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-top: 30px;
+      position: relative;
+    }
+
+    #downloadBtn {
+      margin-top: 15px;
+      display: none;
+    }
+
+    canvas {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>🎖️ Generate Badge for Verified Crop</h2>
+
+  <label for="farmer">Farmer Wallet Address:</label>
+  <input type="text" id="farmer" placeholder="0x...">
+
+  <button onclick="generateBadge()">Generate Badge</button>
+
+  <div id="badgeContainer"></div>
+  <button id="downloadBtn" onclick="downloadBadge()">📥 Download Badge</button>
+
+  <p id="msg"></p>
+
+  <script>
+    let contract;
+    let account;
+
+    const contractAddress = "0x41470E8f446D234e2FD8E86d00e311d3624b5037";
+
+    const contractABI = [ /* ...same ABI as you provided... */ ];
+
+    window.addEventListener('load', async () => {
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        await window.ethereum.enable();
+        const accounts = await web3.eth.getAccounts();
+        account = accounts[0];
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+      } else {
+        alert("MetaMask not detected");
+      }
+    });
+
+    async function generateBadge() {
+      const farmer = document.getElementById("farmer").value;
+      const container = document.getElementById("badgeContainer");
+      container.innerHTML = '';
+      document.getElementById("downloadBtn").style.display = 'none';
+      document.getElementById("msg").innerText = '';
+
+      try {
+        const farmerData = await contract.methods.getFarmer(farmer).call();
+        const journey = await contract.methods.journeys(farmer).call();
+
+        if (!journey.inspected || !journey.approved) {
+          document.getElementById("msg").innerText = "⚠️ This crop has not passed inspection.";
+          return;
+        }
+
+        const crop = journey.cropName;
+        const harvestDate = journey.yieldDate;
+        const batchId = Date.now();
+        const qrURL = `https://cropsync.io/journey.html?batchId=${batchId}`;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = 350;
+        canvas.height = 400;
+        const ctx = canvas.getContext("2d");
+
+        // Background
+        ctx.fillStyle = "#f0fff4";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Border
+        ctx.strokeStyle = "#28a745";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+        // Text
+        ctx.fillStyle = "#000";
+        ctx.font = "20px Segoe UI";
+        ctx.fillText("🌱 Sustainably Grown", 60, 40);
+        ctx.font = "16px Segoe UI";
+        ctx.fillText(`Farmer: ${farmerData.name}`, 20, 80);
+        ctx.fillText(`Location: ${farmerData.location}`, 20, 110);
+        ctx.fillText(`Crop: ${crop}`, 20, 140);
+        ctx.fillText(`Harvested: ${harvestDate}`, 20, 170);
+        ctx.fillText(`Batch ID: ${batchId}`, 20, 200);
+
+        // QR code on canvas
+        const qrCanvas = document.createElement("canvas");
+        QRCode.toCanvas(qrCanvas, qrURL, function (error) {
+          if (error) console.error(error);
+
+          ctx.drawImage(qrCanvas, 100, 230, 150, 150);
+          container.appendChild(canvas);
+          document.getElementById("downloadBtn").style.display = "inline-block";
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("msg").innerText = "❌ Error generating badge.";
+      }
+    }
+
+    function downloadBadge() {
+      const canvas = document.querySelector("#badgeContainer canvas");
+      const link = document.createElement('a');
+      link.download = 'CropSync_Badge.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>

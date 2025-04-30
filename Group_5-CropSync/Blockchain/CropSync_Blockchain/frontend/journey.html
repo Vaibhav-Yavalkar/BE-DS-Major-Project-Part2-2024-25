@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Farm to Fork Journey - CropSync</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      padding: 40px;
+      color: #333;
+    }
+
+    h2 {
+      color: #1e88e5;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+
+    button {
+      background-color: #1e88e5;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+
+    #journeyContainer {
+      margin-top: 30px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 25px;
+      max-width: 600px;
+    }
+
+    #journeyContainer p {
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+
+    #msg {
+      color: red;
+      font-weight: 500;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Farm to Fork Journey 🌾➡️🍽️</h2>
+
+  <label for="farmer">Enter Farmer Wallet Address:</label>
+  <input type="text" id="farmer" placeholder="0x...">
+  <button onclick="loadJourney()">View Journey</button>
+
+  <div id="journeyContainer"></div>
+  <p id="msg"></p>
+
+  <script>
+    let contract;
+    let account;
+
+    const contractAddress = "0x41470E8f446D234e2FD8E86d00e311d3624b5037";
+    const contractABI = [ /* ...keep same ABI from your script... */ ];
+
+    window.addEventListener('load', async () => {
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        await window.ethereum.enable();
+        const accounts = await web3.eth.getAccounts();
+        account = accounts[0];
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const farmerFromURL = urlParams.get('farmer');
+        if (farmerFromURL) {
+          document.getElementById("farmer").value = farmerFromURL;
+          loadJourney();
+        }
+      } else {
+        alert("Please install MetaMask to use this DApp.");
+      }
+    });
+
+    async function loadJourney() {
+      const farmer = document.getElementById("farmer").value;
+      if (!farmer) {
+        document.getElementById("msg").innerText = "Please enter a valid wallet address.";
+        return;
+      }
+
+      try {
+        const farmerData = await contract.methods.getFarmer(farmer).call();
+        const journey = await contract.methods.getCropJourney(farmer).call();
+
+        const html = `
+          <h3>🌱 Product Journey</h3>
+          <p><strong>👨‍🌾 Farmer:</strong> ${farmerData.name}</p>
+          <p><strong>📍 Location:</strong> ${farmerData.location}</p>
+          <p><strong>🌾 Crop:</strong> ${journey[0]}</p>
+          <p><strong>🌱 Sowing Date:</strong> ${journey[1]}</p>
+          <p><strong>📋 Monitoring Notes:</strong> ${journey[2]}</p>
+          <p><strong>🧪 Pesticide Used:</strong> ${journey[3]}</p>
+          <p><strong>📅 Pesticide Date:</strong> ${journey[4]}</p>
+          <p><strong>🕵️ Inspection:</strong> ${journey[5] ? (journey[6] ? "✅ Approved" : "❌ Rejected") : "⏳ Not Yet Inspected"}</p>
+          <p><strong>🌾 Harvested On:</strong> ${journey[7]}</p>
+          <p><strong>🏷️ Sustainability Badge:</strong> ${journey[8] ? "✅ Generated" : "❌ Not Generated Yet"}</p>
+        `;
+
+        document.getElementById("journeyContainer").innerHTML = html;
+        document.getElementById("msg").innerText = "";
+      } catch (err) {
+        console.error(err);
+        document.getElementById("msg").innerText = "❌ Failed to fetch journey. Check the wallet address or ensure journey data exists.";
+      }
+    }
+  </script>
+</body>
+</html>

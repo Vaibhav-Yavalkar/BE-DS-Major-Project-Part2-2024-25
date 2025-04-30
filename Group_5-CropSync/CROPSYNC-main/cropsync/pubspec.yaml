@@ -1,0 +1,43 @@
+name: cropsync
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you're publishing to pub.dev
+
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0" # Corrected to ensure compatibility with Flutter 3.x
+
+dependencies:
+  fl_chart: ^0.70.2
+  http: ^1.3.0
+  flutter:
+  
+    sdk: flutter
+   
+
+  # Add any other packages you are using
+  # Example: HTTP package for networking (uncomment if needed)
+  # http: ^0.13.4
+  
+  # Example: Provider for state management (uncomment if needed)
+  # provider: ^6.0.0
+
+  # Other dependencies as needed for the project
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true # Ensures material design is enabled
+
+  assets:
+    - assets/images/cropsync_logo.png # Add your asset files here (like the CropSync logo)
+
+  # Fonts section if you plan to use custom fonts
+  # fonts:
+  #   - family: CustomFont
+  #     fonts:
+  #       - asset: assets/fonts/CustomFont-Regular.ttf

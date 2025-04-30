@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Inspection - CropSync</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+    <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f8f9fa;
+        padding: 40px;
+        color: #333;
+      }
+  
+      h2 {
+        color: #6c5ce7;
+      }
+  
+      label {
+        font-weight: 500;
+      }
+  
+      input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 4px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-family: inherit;
+      }
+  
+      button {
+        background-color: #6c5ce7;
+        color: white;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+  
+      button:hover {
+        background-color: #5a4bd1;
+      }
+  
+      #statusMsg {
+        margin-top: 20px;
+        font-weight: 500;
+      }
+  
+      .form-container {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+        max-width: 420px;
+      }
+    </style>
+</head>
+<body>
+    <h2>🔍 Crop Inspection Panel</h2>
+
+    <div class="form-container">
+      <label for="farmer">Farmer Wallet Address:</label>
+      <input type="text" id="farmer" placeholder="0x...">
+  
+      <label for="status">Inspection Result:</label>
+      <select id="status">
+        <option value="true">Approve ✅</option>
+        <option value="false">Reject ❌</option>
+      </select>
+  
+      <button onclick="inspectCrop()">Submit Inspection</button>
+    </div>
+  
+    <p id="statusMsg"></p>
+
+  <script>
+    let contract;
+    let account;
+
+    const contractAddress = "0x41470E8f446D234e2FD8E86d00e311d3624b5037";
+    const contractABI = [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "farmers",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "location",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "landSize",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "registered",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "inspector",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "journeys",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "cropName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "sowingDate",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "monitoringNotes",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "pesticideUsed",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "pesticideDate",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "inspected",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        },
+        {
+          "internalType": "string",
+          "name": "yieldDate",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "badgeGenerated",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_location",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_landSize",
+          "type": "uint256"
+        }
+      ],
+      "name": "registerFarmer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_cropName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_sowingDate",
+          "type": "string"
+        }
+      ],
+      "name": "addSowingData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_notes",
+          "type": "string"
+        }
+      ],
+      "name": "addMonitoringNotes",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_pesticideUsed",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_date",
+          "type": "string"
+        }
+      ],
+      "name": "addPesticideData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "farmerAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_approved",
+          "type": "bool"
+        }
+      ],
+      "name": "inspectCrop",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_yieldDate",
+          "type": "string"
+        }
+      ],
+      "name": "addYieldData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "generateBadge",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "farmerAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getCropJourney",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_farmerAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getFarmer",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    }
+  ];
+
+    window.addEventListener('load', async () => {
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        await window.ethereum.enable();
+        const accounts = await web3.eth.getAccounts();
+        account = accounts[0];
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+      } else {
+        alert("Please install MetaMask to continue.");
+      }
+    });
+
+    async function inspectCrop() {
+      const farmerAddr = document.getElementById("farmer").value;
+      const approved = document.getElementById("status").value === "true";
+
+      try {
+        await contract.methods.inspectCrop(farmerAddr, approved).send({ from: account });
+        document.getElementById("statusMsg").innerText = `Crop has been ${approved ? "approved ✅" : "rejected ❌"}`;
+      } catch (err) {
+        console.error(err);
+        document.getElementById("statusMsg").innerText = "Error during inspection update.";
+      }
+    }
+  </script>
+</body>
+</html>
