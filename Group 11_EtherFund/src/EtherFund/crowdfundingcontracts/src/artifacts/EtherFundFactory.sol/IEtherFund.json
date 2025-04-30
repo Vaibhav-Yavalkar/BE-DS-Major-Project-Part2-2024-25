@@ -1,0 +1,57 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "getDonors",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "evm": {
+    "assembly": "",
+    "bytecode": {
+      "functionDebugData": {},
+      "generatedSources": [],
+      "linkReferences": {},
+      "object": "",
+      "opcodes": "",
+      "sourceMap": ""
+    },
+    "deployedBytecode": {
+      "functionDebugData": {},
+      "generatedSources": [],
+      "immutableReferences": {},
+      "linkReferences": {},
+      "object": "",
+      "opcodes": "",
+      "sourceMap": ""
+    },
+    "gasEstimates": null,
+    "legacyAssembly": null,
+    "methodIdentifiers": {
+      "getDonors()": "96f300d4"
+    }
+  },
+  "metadata": "{\"compiler\":{\"version\":\"0.8.25+commit.b61c2a91\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"getDonors\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"EtherFundFactory.sol\":\"IEtherFund\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":800},\"remappings\":[]},\"sources\":{\"EtherFund.sol\":{\"keccak256\":\"0xe718ca43f8f5fc6c225531be047b8617eec81ccf40ba7985bd0337c694e47b4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0681faede45e17338a8417f3ab9a439bc683c0ff46f36670814744c02e5e5871\",\"dweb:/ipfs/QmdXKu6oXTWZZRjmEToEsgEvgvP3iZrYpuYGhSGRQk4xh9\"]},\"EtherFundFactory.sol\":{\"keccak256\":\"0xeaa2a8a458f5afa10405e1403f35b022e08e8b7a6d7ad41f5923fc87c214b6bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f7710f0958fda4c0852c86fb313c4a77b1faa7e8d349f631d07673c1ced00541\",\"dweb:/ipfs/QmXSsxupsWYJNcSaLAcBHfKGqrp2Ksc7QPFNUZWyFTx3ev\"]}},\"version\":1}",
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
