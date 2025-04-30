@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5"><span style="color: #08ac93;">Ai</span>-Powered Treatment</h1>
+    
+    <div class="row justify-content-center">
+        <!-- Oral Treatment Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card treatment-card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-tooth fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title"><span style="color: #08ac93;">Oral</span> Treatment</h3>
+                    <p class="card-text">Comprehensive care powered by smart tools for healthier teeth and gums.</p>
+                    <div class="treatment-features">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i>  AI-assisted Oral Diagnosis</li>
+                            <li><i class="fas fa-check text-success"></i> Gum Disease Analysis</li>
+                            <li><i class="fas fa-check text-success"></i> Personalized Treatment Plans</li>
+                        </ul>
+                    </div>
+                    <form action="{{ url_for('run_oral_treatment') }}" method="post">
+                        <button type="submit" class="btn btn-primary mt-3">
+                            Start
+                        </button>
+                    </form>
+                    {% if session.get('oral_treatment_results') %}
+                    <div class="mt-4">
+                        <h5>Analysis Results:</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <p><strong>Condition:</strong> {{ session.oral_treatment_results.prediction }}</p>
+                                <p><strong>Confidence:</strong> {{ session.oral_treatment_results.confidence }}</p>
+                                <p><strong>Severity:</strong> {{ session.oral_treatment_results.severity }}</p>
+                                {% if session.oral_treatment_results.treatment_plan %}
+                                <div class="mt-3">
+                                    <h6>Treatment Plan:</h6>
+                                    <ul class="list-unstyled">
+                                        {% if session.oral_treatment_results.treatment_plan.symptoms %}
+                                        <li><strong>Symptoms:</strong>
+                                            <ul>
+                                                {% for symptom in session.oral_treatment_results.treatment_plan.symptoms %}
+                                                <li>{{ symptom }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        {% endif %}
+                                        {% if session.oral_treatment_results.treatment_plan.treatments %}
+                                        <li><strong>Treatments:</strong>
+                                            <ul>
+                                                {% for treatment in session.oral_treatment_results.treatment_plan.treatments %}
+                                                <li>{{ treatment }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Ortho Treatment Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card treatment-card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-x-ray fa-3x mb-3 text-info"></i>
+                    <h3 class="card-title"><span style="color: rgb(232, 46, 89);">Orthodontic</span> Treatment</h3>
+                    <p class="card-text">Advanced alignment treatments designed with AI precision and comfort in mind.</p>
+                    <div class="treatment-features">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> AI-Based Smile Alignment</li>
+                            <li><i class="fas fa-check text-success"></i> Misalignment to Alignment</li>
+                            <li><i class="fas fa-check text-success"></i> Realtime Progress-Based Adjustments</li>
+                        </ul>
+                    </div>
+                    <!-- <button class="btn btn-info mt-3">
+                        Start
+                    </button> -->
+                    <form action="{{ url_for('run_ortho_treatment') }}" method="post">
+                        <button type="submit" class="btn btn-primary mt-3">
+                            Start
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Xray Treatment Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card treatment-card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-teeth-open fa-3x mb-3 text-warning"></i>
+                    <h3 class="card-title"><span style="color: rgb(215, 104, 29);">Xray</span> Treatment</h3>
+                    <p class="card-text">Smart, AI-powered X-ray planning with real-time tracking of treatment progress.</p>
+                    <div class="treatment-features">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> AI-Driven Bite & Jaw Analysis</li>
+                            <li><i class="fas fa-check text-success"></i> Visual Treatment Simulation</li>
+                            <li><i class="fas fa-check text-success"></i> Real-Time Prediction</li>
+                        </ul>
+                    </div>
+                    <form action="{{ url_for('run_xray_treatment') }}" method="post">
+                        <button type="submit" class="btn btn-primary mt-3">
+                            Start
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Treatment Details Modal -->
+    <div class="modal fade" id="treatmentModal" tabindex="-1" aria-labelledby="treatmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="treatmentModalLabel">Treatment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="treatmentDetails">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.treatment-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.treatment-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.treatment-features li {
+    margin: 10px 0;
+    font-size: 0.9rem;
+}
+
+.treatment-features i {
+    margin-right: 8px;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+</style>
+
+<script>
+function showTreatmentDetails(type) {
+    const modal = new bootstrap.Modal(document.getElementById('treatmentModal'));
+    const detailsDiv = document.getElementById('treatmentDetails');
+    
+    let content = '';
+    switch(type) {
+        case 'oral':
+            content = `
+                <h4>Oral Treatment Details</h4>
+                <p>Our AI-powered oral treatment system provides:</p>
+                <ul>
+                    <li>Advanced cavity detection using machine learning algorithms</li>
+                    <li>Gum disease analysis with 98% accuracy</li>
+                    <li>Personalized treatment recommendations</li>
+                    <li>Real-time progress tracking</li>
+                </ul>
+                <div class="text-center">
+                    <button class="btn btn-primary" onclick="bookAppointment('oral')">Book Appointment</button>
+                </div>
+            `;
+            break;
+        case 'xray':
+            content = `
+                <h4>Xray Treatment Details</h4>
+                <p>Our AI-enhanced X-ray analysis includes:</p>
+                <ul>
+                    <li>High-precision bone density analysis</li>
+                    <li>Automated root canal detection</li>
+                    <li>Impacted tooth analysis and treatment planning</li>
+                    <li>3D reconstruction capabilities</li>
+                </ul>
+                <div class="text-center">
+                    <button class="btn btn-info" onclick="bookAppointment('xray')">Book Appointment</button>
+                </div>
+            `;
+            break;
+        case 'orthodontic':
+            content = `
+                <h4>Orthodontic Treatment Details</h4>
+                <p>Our AI-powered orthodontic system offers:</p>
+                <ul>
+                    <li>Comprehensive bite analysis</li>
+                    <li>Treatment simulation and planning</li>
+                    <li>Progress tracking and adjustment recommendations</li>
+                    <li>Virtual treatment outcome preview</li>
+                </ul>
+                <div class="text-center">
+                    <button class="btn btn-warning" onclick="bookAppointment('orthodontic')">Book Appointment</button>
+                </div>
+            `;
+            break;
+    }
+    
+    detailsDiv.innerHTML = content;
+    modal.show();
+}
+
+function bookAppointment(type) {
+    window.location.href = '/book_appointment?treatment=' + type;
+}
+</script>
+{% endblock %} 

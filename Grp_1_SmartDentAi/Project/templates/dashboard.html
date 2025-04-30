@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>{% if current_user.is_dentist %}Dr. {{ current_user.username }}'s Dashboard{% else %}Patient Dashboard{% endif %}</h2>
+            {% if not current_user.is_dentist %}
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('book_appointment') }}" class="btn btn-primary">
+                    <i class="bi bi-calendar-plus"></i> Book Appointment
+                </a>
+                <a href="{{ url_for('request_video_call') }}" class="btn btn-success">
+                    <i class="bi bi-camera-video"></i> Request Video Call
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Appointments Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3>Appointments</h3>
+            {% if appointments %}
+            <div class="row">
+                {% for appointment in appointments %}
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {% if current_user.is_dentist %}
+                                Patient: {{ appointment.patient.username }}
+                                {% else %}
+                                Dr. {{ appointment.dentist.username }} ({{ appointment.dentist.specialty }})
+                                {% endif %}
+                            </h5>
+                            <p class="card-text">
+                                Date: {{ appointment.date.strftime('%B %d, %Y') }}<br>
+                                Time: {{ appointment.time.strftime('%I:%M %p') }}<br>
+                                Status: <span class="badge bg-{{ 'success' if appointment.status == 'approved' else 'warning' }}">
+                                    {{ appointment.status }}
+                                </span>
+                            </p>
+                            {% if appointment.notes %}
+                            <p class="card-text"><small class="text-muted">Notes: {{ appointment.notes }}</small></p>
+                            {% endif %}
+                            {% if current_user.is_dentist and appointment.status == 'pending' %}
+                            <form action="{{ url_for('approve_appointment', appointment_id=appointment.id) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                No appointments found.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Video Calls Section -->
+    <div class="row">
+        <div class="col-12">
+            <h3>Video Calls</h3>
+            {% if video_calls %}
+            <div class="row">
+                {% for call in video_calls %}
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {% if current_user.is_dentist %}
+                                Patient: {{ call.patient.username }}
+                                {% else %}
+                                Dr. {{ call.dentist.username }} ({{ call.specialty }})
+                                {% endif %}
+                            </h5>
+                            <p class="card-text">
+                                Status: <span class="badge bg-{{ 'success' if call.status == 'approved' else 'warning' if call.status == 'pending' else 'danger' }}">
+                                    {{ call.status }}
+                                </span><br>
+                                Requested: {{ call.created_at.strftime('%B %d, %Y %I:%M %p') }}
+                                {% if call.scheduled_time %}
+                                <br>Scheduled: {{ call.scheduled_time.strftime('%B %d, %Y %I:%M %p') }}
+                                {% endif %}
+                            </p>
+                            {% if call.notes %}
+                            <p class="card-text"><small class="text-muted">Notes: {{ call.notes }}</small></p>
+                            {% endif %}
+                            
+                            {% if current_user.is_dentist and call.status == 'pending' %}
+                            <form action="{{ url_for('approve_video_call', call_id=call.id) }}" method="POST" class="mb-2">
+                                <div class="mb-2">
+                                    <label for="scheduled_time" class="form-label">Schedule Time</label>
+                                    <input type="datetime-local" class="form-control" id="scheduled_time" name="scheduled_time" required>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                <button type="submit" formaction="{{ url_for('reject_video_call', call_id=call.id) }}" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                            {% elif call.status == 'approved' %}
+                            <a href="{{ url_for('video_call', call_id=call.id) }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-camera-video"></i> Join Call
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                No video calls found.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

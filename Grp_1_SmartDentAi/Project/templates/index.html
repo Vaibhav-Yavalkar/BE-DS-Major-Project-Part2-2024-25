@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="display-4 mb-4">Welcome to <span style="color: #08ac93; font-weight: bold; " >SmartDentAi</span></h1>
+        <p class="lead">Book your dental appointments with ease and manage your dental care efficiently.</p>
+        <div class="mt-4">
+            <h5>Features:</h5>
+            <ul class="list-unstyled">
+                <li><i class="bi bi-check-circle-fill text-success"></i> Expert Oral Diagnosis & Personalized Treatment</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Advanced X-Ray Imaging & Smart Diagnostics</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Ai Powered Orthodontic treatment planning</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Quick & Easy Appointment Booking</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Real-Time Video Consultations with Dentists</li>
+            </ul>
+        </div>
+        {% if not current_user.is_authenticated %}
+        <div class="mt-4">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-2">Register</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+             class="img-fluid rounded shadow" alt="Dental Care">
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Our Services</h2>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-tooth text-primary" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-3">Oral Treatment</h5>
+                <p class="card-text">Diagnosis and treatment of cavities and gum diseases</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-brush text-primary" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-3">Orthodontic Treatment</h5>
+                <p class="card-text">Retainers to keep your smile in shape</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-heart-pulse text-primary" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-3">Xray Treatment</h5>
+                <p class="card-text">AI-assisted detection of hidden dental issues</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
